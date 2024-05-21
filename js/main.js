@@ -139,7 +139,7 @@ function searchByName(){
             document.getElementById("rowInput").innerHTML += `
             <div class="col-lg-4 col-md-6 col-sm-12">
     <div class="card w-100">
-        <img src="./imgs/product.png" class="card-img-top w-100 d-block" alt="...">
+        <img src="${pList[i].img}" class="card-img-top w-100 d-block" alt="...">
         <div class="card-body">
             <span class="badge bg-primary"> ${pList[i].category} </span>
             <h5 class="card-title mt-2">${pList[i].name}</h5>
