@@ -5,7 +5,9 @@ var productDescInput = document.getElementById("productDesc");
 var rowInput = document.getElementById("rowInput");
 var addBtn = document.getElementById("addBtn");
 var updateBtn = document.getElementById("updateBtn");
-
+var searchProductInput = document.getElementById("productSearch");
+var productImgInput = document.getElementById("productImg");
+var productIndexToUpdate = -1;
 
 var pList;
 if (localStorage.getItem("products") == null) {
@@ -17,11 +19,13 @@ if (localStorage.getItem("products") == null) {
 
 
 function addProduct() {
+    var imgUrl = URL.createObjectURL(productImgInput.files[0]);
     var product = {
         name: productNameInput.value,
         price: productPriceInput.value,
         category: productCategoryInput.value,
-        desc: productDescInput.value
+        desc: productDescInput.value,
+        img: imgUrl
     }
     pList.push(product);
     localStorage.setItem("products", JSON.stringify(pList));
@@ -35,7 +39,7 @@ function addProduct() {
 function displayProduct(p, index) {
     rowInput.innerHTML += `  <div class="col-lg-4 col-md-6 col-sm-12">
     <div class="card w-100">
-        <img src="./imgs/product.png" class="card-img-top w-100 d-block" alt="...">
+        <img src="${p.img}" class="card-img-top w-100 d-block" alt="...">
         <div class="card-body">
             <span class="badge bg-primary"> ${p.category} </span>
             <h5 class="card-title mt-2">${p.name}</h5>
@@ -78,18 +82,20 @@ function deleteProduct(index) {
 }
 
 function setUpFormToUpdate(index){
+    productIndexToUpdate = index;
     productNameInput.value = pList[index].name;
     productPriceInput.value = pList[index].price;
     productCategoryInput.value = pList[index].category;
     productDescInput.value = pList[index].desc;
     addBtn.classList.add("d-none");
     updateBtn.classList.remove("d-none");
-    updateBtn.setAttribute("onclick", `updateProduct(${index})`);
     window.scrollTo(0, 0);
 
 }
 
-function updateProduct(index){
+function updateProduct(){
+
+    var index = productIndexToUpdate;
     var product = {
         name: productNameInput.value,
         price: productPriceInput.value,
@@ -102,4 +108,50 @@ function updateProduct(index){
     displayPlist();
     addBtn.classList.remove("d-none");
     updateBtn.classList.add("d-none");
+}
+
+function validateInput(inputID, regexKey, alertEID){
+    var input = document.getElementById(inputID);
+    var regex = {
+        name: /^[A-Z][a-zA-Z0-9 ]{2,14}$/,
+        price: /^[1-9][0-9]{1,4}$/,
+        category: /^[A-Z][a-zA-Z0-9 ]{2,50}$/,
+        desc: /^[A-Z][a-zA-Z0-9 ]{10,50}$/
+    };
+    var isValid = regex[regexKey].test(input.value);
+    document.getElementById(inputID).classList.remove("is-valid", "is-invalid");
+    if(isValid){
+        document.getElementById(alertEID).classList.add("d-none");
+        document.getElementById(inputID).classList.add("is-valid");
+
+    }
+    else{
+        document.getElementById(inputID).classList.add("is-invalid");
+        document.getElementById(alertEID).classList.remove("d-none");
+    }
+};
+
+function searchByName(){
+    document.getElementById("rowInput").innerHTML = '';
+    var term = searchProductInput.value.toLowerCase();
+    for (var i = 0; i < pList.length; i++) {
+        if (pList[i].name.toLowerCase().startsWith(term)) {
+            document.getElementById("rowInput").innerHTML += `
+            <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="card w-100">
+        <img src="./imgs/product.png" class="card-img-top w-100 d-block" alt="...">
+        <div class="card-body">
+            <span class="badge bg-primary"> ${pList[i].category} </span>
+            <h5 class="card-title mt-2">${pList[i].name}</h5>
+            <p class="card-text">${pList[i].desc}</p>
+            <span class="text-primary fs-5">${pList[i].price} $</span>
+        </div>
+        <button class="btn btn-success m-1" onclick="setUpFormToUpdate(${i})">Update</button>
+        <button class="btn btn-danger m-1" onclick="deleteProduct(${i})">Delete</button>
+    </div>
+</div>
+            `
+        }
+    }
+    
 }

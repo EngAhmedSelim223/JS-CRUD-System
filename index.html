@@ -21,20 +21,32 @@
                 <div class="mt-5">
                     <div class="mb-3">
                         <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" aria-describedby="emailHelp">
+                        <input oninput="validateInput('productName', 'name', 'nameAlert')" type="text" class="form-control" id="productName" aria-describedby="emailHelp">
+                        <div class="alert alert-danger my-2 d-none" id="nameAlert">
+                            should start with capital letter and not less than 3 characters
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="productPrice" class="form-label">Product Price</label>
-                        <input type="number" class="form-control" id="productPrice">
+                        <input oninput="validateInput('productPrice', 'price', 'priceAlert')" type="number" class="form-control" id="productPrice">
+                        <div class="alert alert-danger my-2 d-none" id="priceAlert">
+                            should be a number and not less than 1
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="productDesc" class="form-label">Product Description</label>
-                        <input type="text" class="form-control" id="productDesc">
+                        <input oninput="validateInput('productDesc', 'desc', 'descAlert')" type="text" class="form-control" id="productDesc">
+                        <div class="alert alert-danger my-2 d-none" id="descAlert">
+                            should not be empty
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="productCategory" class="form-label">Product Category</label>
-                        <input type="text" class="form-control" id="productCategory" list="categories">
+                        <input oninput="validateInput('productCategory', 'category', 'catAlert')" type="text" class="form-control" id="productCategory" list="categories">
+                        <div class="alert alert-danger my-2 d-none" id="catAlert">
+                            should not be empty
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -54,7 +66,11 @@
                 </div>
             </div>
         </div>
-
+       <div class="mt-5">
+        <label for="productSearch" class="form-label">Search Product</label>
+        <input oninput="searchByName()" type="text" class="form-control" id="productSearch" aria-describedby="emailHelp" placeholder="Search">
+        
+       </div>
         <div class="row mt-5 g-3" id="rowInput">
            
         </div>
@@ -72,6 +88,7 @@
     <!-- Bootstrap JS-->
     <script src="./js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
+    <script src="./js/Regex.js"></script>
     <script src="./js/main.js"></script>
 </body>
 
